@@ -75,6 +75,17 @@ docker run -d --name wordpress -it --rm -p 80:80 \
 -e TZ=America/Lima wordpress:5.7.2
 ```
 
+### Run with remote variables
+
+Required variables could be configured remotely to avoid shell access.
+
+```
+docker run -d --name wordpress -it --rm -p 80:80 \
+-e CONFIGURATOR_GET_VARIABLES_FULL_URL=http://192.168.1.20:2708/api/v1/variables?application=wordpress \
+-e CONFIGURATOR_AUTH_HEADER=apiKey:changeme \
+-e TZ=America/Lima wordpress:5.7.2
+```
+
 Finally go to `http://localhost` and enter these credentials:
 
 - user: admin
