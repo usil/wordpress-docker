@@ -7,4 +7,8 @@ function start {
   exec apache2 -DFOREGROUND
 }
 
+
+########################
+# Scripts starts here
+########################
 start

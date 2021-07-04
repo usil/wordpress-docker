@@ -2,11 +2,6 @@
 
 Current version 5.7.2
 
-### First Things First
-
-Welcome. WordPress [5.7.2](https://wordpress.org/wordpress-5.7.2.zip) is a very special project to me. Every developer and contributor adds something unique to the mix, and together we create something beautiful that I’m proud to be a part of. Thousands of hours have gone into WordPress, and we’re dedicated to making it better every day. Thank you for making it part of your world.
-
-
 # Requirements
 
 - Docker latest version (php 7.4)
@@ -48,6 +43,8 @@ Traditionally wordpress configurations are performed with manuall modifications 
 |NONCE_SALT| random value  |
 |WP_DEBUG| true or false. Used to find low level errors in wordpress  |
 |DISABLE_WP_CRON| true or false. Used to enable the cron |
+|WP_SITEURL| ip or domain. Used to deploy your wordpress from local to another domain|
+|WP_HOME| ip or domain. Used to deploy your wordpress from local to another domain|
 
 
 Use this command `$(hostname -I| awk '{printf $1}')` to get the ip of the host in which database is running. If you are  using a remote mysql (gcp, aws, azure, etc) set the public domain or ip  in **DB_HOST** var
@@ -84,3 +81,7 @@ Finally go to `http://localhost` and enter these credentials:
 - password: 123456
 
 Don't forget to change the password.
+
+# Tips
+
+- Low level errors in /var/log/apache2/error.log

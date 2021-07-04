@@ -6,7 +6,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN set -eux
 
 RUN apt-get update
-RUN apt-get install -y software-properties-common
+RUN apt-get install -y software-properties-common curl
 RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
 RUN apt-get update -y
 

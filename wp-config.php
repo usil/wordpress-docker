@@ -18,6 +18,15 @@
  * @package WordPress
  */
 
+ //move wordpress from localhost to another wordpress's domain
+ //https://stackoverflow.com/q/68232620/3957754
+ if (getenv('WP_SITEURL')!=null){
+  define('WP_SITEURL', getenv('WP_SITEURL'));
+ }
+ if (getenv('WP_HOME')!=null){
+  define('WP_HOME', getenv('WP_HOME'));
+ } 
+
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
 define('DB_NAME', getenv('DB_NAME'));
@@ -95,9 +104,7 @@ require_once(ABSPATH . 'wp-settings.php');
 
 if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') $_SERVER['HTTPS']='on';
 
-/**
- * Disable WP Cron
- */
+//Disable WP Cron
 if ( getenv('DISABLE_WP_CRON')  === "true" ) {
 	define( 'DISABLE_WP_CRON', true );
 }else{
