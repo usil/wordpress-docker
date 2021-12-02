@@ -1,0 +1,56 @@
+version: '3.2'
+services:
+  wordpress-db:
+    image: mysql:5.7
+    container_name: wordpress-db
+    ports:
+      - 3306:3306
+    command: mysqld --general-log=1 --general-log-file=/var/log/mysql/general-log.log
+    environment:
+      MYSQL_ROOT_PASSWORD: changeme
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: usr_wordpress
+      MYSQL_PASSWORD: changeme
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
+    healthcheck:
+          test: "cat /var/log/mysql/general-log.log | grep \"root@localhost on  using Socket\""
+          interval: 1s
+          retries: 120
+    networks:
+      - _network
+  wordpress:
+    build: .
+    image: wordpress
+    container_name: wordpress
+    ports:
+      - 80:80
+    environment:
+      # WP_SITEURL : localhost
+      WP_HOME : localhost
+      DB_HOST : host.docker.internal:3306
+      DB_USER : usr_wordpress
+      DB_PASSWORD : changeme
+      DB_NAME : wordpress
+      AUTH_KEY : "****"
+      SECURE_AUTH_KEY : "****"
+      NONCE_KEY : "****"
+      LOGGED_IN_KEY : "****"
+      AUTH_SALT : "****"
+      SECURE_AUTH_SALT : "****"
+      LOGGED_IN_SALT : "****"
+      NONCE_SALT : "****"
+      WP_DEBUG : "false"
+      DISABLE_WP_CRON : "true"
+      TZ : America/Lima
+    depends_on:
+        wordpress-db:
+            condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - _network
+
+networks:
+  _network:
+    driver: bridge
