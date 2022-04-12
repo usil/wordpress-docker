@@ -78,7 +78,11 @@ define('NONCE_SALT',       getenv('WP_NONCE_SALT'));
  * You can have multiple installations in one database if you give each
  * a unique prefix. Only numbers, letters, and underscores please!
  */
-$table_prefix  = 'wp_';
+if (getenv('TABLES_PREFIX')!=null){
+  $table_prefix  = getenv('TABLES_PREFIX');
+}else{
+  $table_prefix  = 'wp_';
+}
 
 /**
  * For developers: WordPress debugging mode.
@@ -93,16 +97,16 @@ $table_prefix  = 'wp_';
  * @link https://codex.wordpress.org/Debugging_in_WordPress
  */
 if ( getenv('WP_DEBUG')  === "true" ) {
-	define( 'WP_DEBUG', true );
+  define( 'WP_DEBUG', true );
 }else{
-	define( 'WP_DEBUG', false );
+  define( 'WP_DEBUG', false );
 }
 
 /* That's all, stop editing! Happy blogging. */
 
 /** Absolute path to the WordPress directory. */
 if ( ! defined( 'ABSPATH' ) ) {
-	define( 'ABSPATH', __DIR__ . '/' );
+  define( 'ABSPATH', __DIR__ . '/' );
 }
 
 /** Sets up WordPress vars and included files. */

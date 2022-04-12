@@ -21,7 +21,14 @@ RUN a2enmod rewrite
 ## copy custom wordpress code
 
 RUN mkdir -p /var/www/html
+# comment for development purpose
 COPY . /var/www/html
+
+
+# install wp cli
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+RUN chmod +x wp-cli.phar
+RUN mv wp-cli.phar /usr/local/bin/wp
 
 WORKDIR /var/www/html
 
@@ -43,6 +50,9 @@ RUN echo "    AllowOverride All" >> /etc/apache2/apache2.conf
 RUN echo "    Require all granted" >> /etc/apache2/apache2.conf
 RUN echo "</Directory>" >> /etc/apache2/apache2.conf
 RUN a2enmod rewrite
+
+RUN chown -R www-data:www-data /var/www/html/
+RUN chmod -R 755 /var/www/html/
 
 # final docker configuration
 

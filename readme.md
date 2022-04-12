@@ -52,7 +52,8 @@ Traditionally wordpress configurations are performed with manuall modifications 
 |NONCE_SALT| random value  |
 |WP_DEBUG| "true" or "false". Used to find low level errors in wordpress  |
 |DISABLE_WP_CRON| "true" or "false". Used to enable the cron |
-
+|TABLES_PREFIX| used if your tables has another prefix than **wp_** |
+|PREVIOUS_DOMAIN| used to fix urls which are hardcoded into files or db. Example if developer used http://localhost/xamp/foo but the real domain will be http://enterprise.com put this value http://localhost/xamp/foo into PREVIOUS_DOMAIN and http://enterprise.com in WP_SITEURL. If database is not hardcoded, don't use this value|
 
 Use this command `$(hostname -I| awk '{printf $1}')` to get the ip of the host in which database is running. If you are  using a remote mysql (gcp, aws, azure, etc) set the public domain or ip  in **DB_HOST** var
 

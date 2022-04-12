@@ -43,7 +43,23 @@ function download_env_variables {
 
 }
 
+function replace_domain {
+  if [[ -n "$PREVIOUS_DOMAIN" ]]
+  then
+    echo "replacing previous domain: $PREVIOUS_DOMAIN to new domain: $WP_SITEURL"
+    wp search-replace $PREVIOUS_DOMAIN $WP_SITEURL --precise --recurse-objects --all-tables --allow-root
+  fi
+}
+
+function set_permissions {
+  mkdir -p /var/log/apache2/
+  chmod -R 750 /var/log/apache2/
+  chown -R www-data:www-data /var/log/apache2/
+}
+
+
 function start {
+  echo "starting wordpress..."
   php -v
   source /etc/apache2/envvars
   exec apache2 -DFOREGROUND
@@ -53,5 +69,7 @@ function start {
 ########################
 # Scripts starts here
 ########################
+set_permissions
 download_env_variables
+replace_domain
 start
