@@ -57,6 +57,23 @@ function set_permissions {
   chown -R www-data:www-data /var/log/apache2/
 }
 
+function enable_failsafe_mode {
+  if [[ -n "$FAILSAFE_MODE" ]] && [[ "$FAILSAFE_MODE" == "true" ]];
+  then
+    cp wp-failsafe/index_failsafe.php /var/www/html/index.php
+  else
+
+    if [[ -n "$FAILSAFE_MODE" ]] && [[ "$FAILSAFE_MODE" == "false" ]];
+    then
+      cp wp-failsafe/index_default.php /var/www/html/index.php
+    else
+      cp wp-failsafe/index_default.php /var/www/html/index.php
+    fi  
+    
+  fi
+}
+
+
 
 function start {
   echo "starting wordpress..."
@@ -71,5 +88,6 @@ function start {
 ########################
 set_permissions
 download_env_variables
+enable_failsafe_mode
 replace_domain
 start

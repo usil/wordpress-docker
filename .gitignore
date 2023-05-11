@@ -26,4 +26,5 @@
 !wp-settings.php
 !wp-signup.php
 !wp-trackback.php
+!wp-failsafe/
 !xmlrpc.php

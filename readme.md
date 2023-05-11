@@ -1,6 +1,6 @@
 # Wordpress With Docker
 
-Wordpress  5.7.2 + Docker
+Wordpress 5.7.2 + Php 7.4.33 + Apache 2.0 + Mysql 5.7 + Docker
 
 > Just the file **wp-config.php** is the only difference with the official version https://wordpress.org/wordpress-5.7.2.tar.gz
 
@@ -54,6 +54,7 @@ Traditionally wordpress configurations are performed with manuall modifications 
 |DISABLE_WP_CRON| "true" or "false". Used to enable the cron |
 |TABLES_PREFIX| used if your tables has another prefix than **wp_** |
 |PREVIOUS_DOMAIN| used to fix urls which are hardcoded into files or db. Example if developer used http://localhost/xamp/foo but the real domain will be http://enterprise.com put this value http://localhost/xamp/foo into PREVIOUS_DOMAIN and http://enterprise.com in WP_SITEURL. If database is not hardcoded, don't use this value|
+|FAILSAFE_MODE| true or false. This will replace the default index.php with a version in which some validations are performed and its error are showed in the html to help the debuggers in case of 502 similar errors|
 
 Use this command `$(hostname -I| awk '{printf $1}')` to get the ip of the host in which database is running. If you are  using a remote mysql (gcp, aws, azure, etc) set the public domain or ip  in **DB_HOST** var
 
