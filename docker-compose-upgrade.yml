@@ -1,0 +1,38 @@
+version: '3.2'
+services:
+  wordpress-db-tmp:
+    image: mysql:5.7
+    container_name: wordpress-db-tmp
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: changeme
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: usr_wordpress
+      MYSQL_PASSWORD: changeme    
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 55
+    networks:
+      - _network
+  wordpress:
+    build: 
+      dockerfile: Dockerfile-upgrade
+    image: wordpress-tmp
+    container_name: wordpress-tmp
+    ports:
+      - 80:80
+    depends_on:
+        wordpress-db-tmp:
+            condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - _network
+
+networks:
+  _network:
+    driver: bridge

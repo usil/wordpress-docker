@@ -1,33 +1,32 @@
 # Wordpress With Docker
 
-Wordpress 5.7.2 + Php 7.4.33 + Apache 2.0 + Mysql 5.7 + Docker
+Wordpress 6.4.2 + Php 7.4.33 + Apache 2.0 + Mysql 5.7 + Docker
 
-> Just the file **wp-config.php** is the only difference with the official version https://wordpress.org/wordpress-5.7.2.tar.gz
+![image](https://github.com/usil/wordpress-docker/assets/3322836/a142012f-a21a-4fe0-88fc-de4bfc5b69be)
 
-# Requirements
+> Just the file wp-config.php, docker files and readme.md are the only difference with the official version https://wordpress.org/download/
+
+## Requirements
 
 - docker
-- docker-compose
+- docker compose
 
-# One-Click Step
+## One Click Step
 
-The following command will deploy tha database, import the .sql and start the wordpress:
-
-```
-docker-compose up -d
-```
-
-# Detailed Steps
-
-- build
-- variables
-- run
-
-## Build
+The following command will deploy the database, import the .sql and start the wordpress:
 
 ```
-docker build -t wordpress:5.7.2 .
+docker compose up -d --build
 ```
+
+For manually docker build and run, read this [document](https://github.com/usil/wordpress-docker/wiki/Run-with-docker)
+
+## Try it
+
+Finally go to `http://localhost/wp-admin` and enter these credentials:
+
+- user: admin
+- password: ohUCE0BX2t5TFT9Ygw
 
 ## Variables
 
@@ -54,60 +53,32 @@ Traditionally wordpress configurations are performed with manuall modifications 
 |DISABLE_WP_CRON| "true" or "false". Used to enable the cron |
 |TABLES_PREFIX| used if your tables has another prefix than **wp_** |
 |PREVIOUS_DOMAIN| used to fix urls which are hardcoded into files or db. Example if developer used http://localhost/xamp/foo but the real domain will be http://enterprise.com put this value http://localhost/xamp/foo into PREVIOUS_DOMAIN and http://enterprise.com in WP_SITEURL. If database is not hardcoded, don't use this value|
-|FAILSAFE_MODE| true or false. This will replace the default index.php with a version in which some validations are performed and its error are showed in the html to help the debuggers in case of 502 similar errors|
-
-Use this command `$(hostname -I| awk '{printf $1}')` to get the ip of the host in which database is running. If you are  using a remote mysql (gcp, aws, azure, etc) set the public domain or ip  in **DB_HOST** var
-
-## Run
+|FAILSAFE_MODE| enabe or rollback. This will replace the default index.php with a version in which some validations are performed and its error are showed in the html to help the debuggers in case of 502 similar errors|
 
 
-```
-export RANDOM_KEY=$(uuidgen)
-```
-
-```
-docker run -d --name wordpress -it --rm -p 80:80 \
--e DB_HOST=10.10.10.10:3306 \
--e DB_USER=root \
--e DB_PASSWORD=secret \
--e DB_NAME=wordpress \
--e AUTH_KEY=$RANDOM_KEY \
--e SECURE_AUTH_KEY=$RANDOM_KEY \
--e NONCE_KEY=$RANDOM_KEY \
--e LOGGED_IN_KEY=$RANDOM_KEY \
--e AUTH_SALT=$RANDOM_KEY \
--e SECURE_AUTH_SALT=$RANDOM_KEY \
--e LOGGED_IN_SALT=$RANDOM_KEY \
--e NONCE_SALT=$RANDOM_KEY \
--e WP_DEBUG=true \
--e DISABLE_WP_CRON=true \
--e TZ=America/Lima wordpress:5.7.2
-```
-
-## Run with remote variables
-
-Required variables could be configured remotely to avoid shell access.
-
-```
-docker run -d --name wordpress -it --rm -p 80:80 \
--e CONFIGURATOR_GET_VARIABLES_FULL_URL=http://foo.com/api/v1/variables?application=wordpress \
--e CONFIGURATOR_AUTH_HEADER=apiKey:changeme \
--e TZ=America/Lima wordpress:5.7.2
-```
-
-# Open wordpress
-
-Finally go to `http://localhost` and enter these credentials:
-
-- user: admin
-- password: 123456
-
-Don't forget to change the password.
-
-# Tips
+## Tips
 
 - Low level errors in /var/log/apache2/error.log
 - Set your preferred timezone in TZ variable
+
+## Upgrade
+
+To update this wordpress with the official latest wordpress follow this [document](https://github.com/usil/wordpress-docker/wiki/Upgrade-for-contribution)
+
+## Prodcuction usage
+
+For production usage I advice you:
+
+- Don't use docker compose.
+- :warning: Change the admin password and mail in the first login :warning:
+- Build this docker wordpress image and push it to your private docker registry
+- Create your mysql database as a service like AWS RDS (automatic backups)
+- In the wordpress server just download the docker image (docker pull ...) and run it with the desired variables.
+- Use a s3 plugin for user uploads. If you don't to that, if the docker container dies , al your images, videos will die too. With s3 or similar plugin, you will have the maximun portability opening the possibility to an easy and clean verticall scaling
+  - Suggested AWS S3 plugin: https://wordpress.org/plugins/amazon-s3-and-cloudfront/
+  - An option could be use docker volumes to mount a folder in the host with the ** /wp-content/uploads** in the container.
+- Use remote variables with some configuration manager like [configurator](https://github.com/jrichardsz-software-architect-tools/configurator) or [similars](https://github.com/jrichardsz-software-architect-tools/configurator/wiki/Alternatives)
+- To avoid manually docker runs, use some CI server like [Jenkins](https://www.jenkins.io/) and a container orchestrator like [AWS Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/) or Kubernetes.
 
 # Contributors
 

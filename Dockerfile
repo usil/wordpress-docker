@@ -22,7 +22,8 @@ RUN a2enmod rewrite
 
 RUN mkdir -p /var/www/html
 # comment for development purpose
-COPY . /var/www/html
+COPY ./wordpress /var/www/html
+COPY ./wp-config.php /var/www/html/wp-config.php
 
 
 # install wp cli

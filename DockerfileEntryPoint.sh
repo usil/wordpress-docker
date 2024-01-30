@@ -58,21 +58,40 @@ function set_permissions {
 }
 
 function enable_failsafe_mode {
-  if [[ -n "$FAILSAFE_MODE" ]] && [[ "$FAILSAFE_MODE" == "true" ]];
+
+  if [ "$FAILSAFE_MODE" == "" ];
+  then
+    # FAILSAFE_MODE is not configured
+    return 0
+  fi
+
+  if [ "$FAILSAFE_MODE" == "enable" ];
   then
     cp wp-failsafe/index_failsafe.php /var/www/html/index.php
   else
 
-    if [[ -n "$FAILSAFE_MODE" ]] && [[ "$FAILSAFE_MODE" == "false" ]];
+    if [ "$FAILSAFE_MODE" == "rollback" ];
     then
-      cp wp-failsafe/index_default.php /var/www/html/index.php
-    else
       cp wp-failsafe/index_default.php /var/www/html/index.php
     fi  
     
   fi
 }
 
+function stats {  
+  echo_log "disk" 
+  df -h
+  echo_log "ram"
+  free -h
+  echo_log "internet test connection"
+  curl -Is http://www.google.com | grep 200
+  if [[ ! "x${CONFIGURATOR_GET_VARIABLES_FULL_URL}" = "x"  && ! "x${CONFIGURATOR_AUTH_HEADER}" = "x" ]]; then
+   echo_log "configurator test connection"
+   configurator_domain=$(echo ${CONFIGURATOR_GET_VARIABLES_FULL_URL} | awk -F[/:] '{print $4}')
+   curl -Is "$configurator_domain" | grep 302
+  fi  
+  
+}
 
 
 function start {
@@ -87,6 +106,7 @@ function start {
 # Scripts starts here
 ########################
 set_permissions
+stats
 download_env_variables
 enable_failsafe_mode
 replace_domain
